@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Search, SearchX, RotateCcw } from "lucide-react";
 import { hackathons } from "@/data/hackathons";
 import { HackathonCard } from "@/components/HackathonCard";
+import { HackathonCardSkeleton } from "@/components/HackathonCardSkeleton";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({

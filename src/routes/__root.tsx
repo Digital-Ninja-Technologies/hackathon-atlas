@@ -37,6 +37,10 @@ export const Route = createRootRoute({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Hackathon Radar" },
+      { name: "twitter:description", content: "Discover the best hackathons happening worldwide." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4624dd87-82b7-41f9-913d-2f22f3c5ae74/id-preview-f1259e31--00dd43cb-9aa6-406d-9fe7-876b227d6160.lovable.app-1778060317304.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4624dd87-82b7-41f9-913d-2f22f3c5ae74/id-preview-f1259e31--00dd43cb-9aa6-406d-9fe7-876b227d6160.lovable.app-1778060317304.png" },
     ],
     links: [
       {

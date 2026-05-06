@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Search, SearchX, RotateCcw } from "lucide-react";
 import { hackathons } from "@/data/hackathons";
 import { HackathonCard } from "@/components/HackathonCard";
+import { HackathonCardSkeleton } from "@/components/HackathonCardSkeleton";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
@@ -37,6 +39,19 @@ function Index() {
   const [mode, setMode] = useState<(typeof MODES)[number]>("All");
   const [status, setStatus] = useState<(typeof STATUSES)[number]>("All");
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("All");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 600);
+    return () => clearTimeout(t);
+  }, []);
+
+  const resetFilters = () => {
+    setQuery("");
+    setMode("All");
+    setStatus("All");
+    setCategory("All");
+  };
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -59,22 +74,22 @@ function Index() {
 
       <main className="mx-auto max-w-6xl px-6 pb-24">
         {/* Hero */}
-        <section className="pt-16 pb-10 sm:pt-24">
-          <div className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground">
+        <section className="pt-16 pb-12 sm:pt-28 sm:pb-16 animate-fade-in">
+          <div className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-foreground/20">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
             {hackathons.length} hackathons live this season
           </div>
-          <h1 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h1 className="mt-6 max-w-2xl text-4xl font-semibold tracking-tight sm:text-6xl sm:leading-[1.05]">
             Find Your Next Hackathon
           </h1>
-          <p className="mt-3 max-w-xl text-base text-muted-foreground sm:text-lg">
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Discover upcoming, ongoing, and past hackathons tailored for you.
           </p>
         </section>
 
         {/* Filter bar */}
         <section
-          className="sticky top-16 z-30 -mx-2 mb-8 rounded-2xl border bg-background/80 p-3 backdrop-blur-md sm:p-4"
+          className="sticky top-16 z-30 -mx-2 mb-10 rounded-2xl border bg-background/80 p-3 backdrop-blur-md transition-shadow sm:p-4"
           style={{ boxShadow: "var(--shadow-soft)" }}
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -145,16 +160,53 @@ function Index() {
           </div>
         </section>
 
+        {/* Results header */}
+        <div className="mb-5 flex items-baseline justify-between">
+          <h2 className="text-sm font-medium text-muted-foreground">
+            {loading ? "Loading hackathons…" : `${filtered.length} ${filtered.length === 1 ? "result" : "results"}`}
+          </h2>
+          {!loading && (query || mode !== "All" || status !== "All" || category !== "All") && (
+            <button
+              onClick={resetFilters}
+              className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+
         {/* Grid */}
-        {filtered.length > 0 ? (
+        {loading ? (
           <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((h) => (
-              <HackathonCard key={h.id} h={h} />
+            {Array.from({ length: 6 }).map((_, i) => (
+              <HackathonCardSkeleton key={i} />
+            ))}
+          </section>
+        ) : filtered.length > 0 ? (
+          <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((h, i) => (
+              <div
+                key={h.id}
+                className="animate-fade-in"
+                style={{ animationDelay: `${Math.min(i * 60, 360)}ms`, animationFillMode: "backwards" }}
+              >
+                <HackathonCard h={h} />
+              </div>
             ))}
           </section>
         ) : (
-          <div className="rounded-2xl border border-dashed py-20 text-center">
-            <p className="text-sm text-muted-foreground">No hackathons match your filters.</p>
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed bg-card/50 px-6 py-20 text-center animate-fade-in">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
+              <SearchX className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <h3 className="mt-5 text-lg font-semibold tracking-tight">No hackathons found</h3>
+            <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+              Try adjusting your search or removing a filter — there might be something great hiding under a different category.
+            </p>
+            <Button onClick={resetFilters} variant="outline" size="sm" className="mt-6">
+              <RotateCcw className="h-3.5 w-3.5" />
+              Reset filters
+            </Button>
           </div>
         )}
       </main>

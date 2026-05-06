@@ -69,7 +69,7 @@ function HackathonDetail() {
           <p className="mt-3 text-lg text-muted-foreground">{h.shortDescription}</p>
 
           <div className="mt-5 flex flex-wrap gap-1.5">
-            {h.tags.map((t) => (
+            {h.tags.map((t: string) => (
               <Badge key={t} variant="secondary" className="rounded-full font-normal">{t}</Badge>
             ))}
           </div>

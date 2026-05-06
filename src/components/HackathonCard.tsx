@@ -15,7 +15,7 @@ function formatDateRange(start: string, end?: string) {
 export function HackathonCard({ h }: { h: Hackathon }) {
   return (
     <article
-      className="group flex flex-col rounded-2xl border bg-card p-6 transition-all hover:-translate-y-0.5"
+      className="group relative flex flex-col rounded-2xl border bg-card p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-foreground/20 hover:[box-shadow:var(--shadow-card)]"
       style={{ boxShadow: "var(--shadow-soft)" }}
     >
       <div className="flex items-start justify-between gap-4">

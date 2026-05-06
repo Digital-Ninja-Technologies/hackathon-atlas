@@ -20,22 +20,30 @@ export const Route = createFileRoute("/")({
 });
 
 const MODES = ["All", "Online", "Offline", "Hybrid"] as const;
+const STATUSES = ["All", "Upcoming", "Ongoing", "Past"] as const;
+const CATEGORIES = ["All", "AI", "Web3", "Design", "Open Source"] as const;
+
+function getStatus(h: { date: string; endDate?: string }): "Upcoming" | "Ongoing" | "Past" {
+  const now = Date.now();
+  const start = new Date(h.date).getTime();
+  const end = new Date(h.endDate ?? h.date).getTime();
+  if (now < start) return "Upcoming";
+  if (now > end) return "Past";
+  return "Ongoing";
+}
 
 function Index() {
   const [query, setQuery] = useState("");
   const [mode, setMode] = useState<(typeof MODES)[number]>("All");
-  const [tag, setTag] = useState<string>("All");
-
-  const allTags = useMemo(
-    () => ["All", ...Array.from(new Set(hackathons.flatMap((h) => h.tags)))],
-    [],
-  );
+  const [status, setStatus] = useState<(typeof STATUSES)[number]>("All");
+  const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("All");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return hackathons.filter((h) => {
       if (mode !== "All" && h.mode !== mode) return false;
-      if (tag !== "All" && !h.tags.includes(tag)) return false;
+      if (status !== "All" && getStatus(h) !== status) return false;
+      if (category !== "All" && !h.tags.includes(category)) return false;
       if (!q) return true;
       return (
         h.name.toLowerCase().includes(q) ||
@@ -43,7 +51,7 @@ function Index() {
         h.tags.some((t) => t.toLowerCase().includes(q))
       );
     });
-  }, [query, mode, tag]);
+  }, [query, mode, status, category]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -57,16 +65,18 @@ function Index() {
             {hackathons.length} hackathons live this season
           </div>
           <h1 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl">
-            Find your next hackathon.
+            Find Your Next Hackathon
           </h1>
           <p className="mt-3 max-w-xl text-base text-muted-foreground sm:text-lg">
-            A curated radar of the world's best hackathons — from AI to Web3, online and in-person.
+            Discover upcoming, ongoing, and past hackathons tailored for you.
           </p>
         </section>
 
         {/* Filter bar */}
-        <section className="sticky top-16 z-30 -mx-2 mb-8 rounded-2xl border bg-background/80 p-3 backdrop-blur-md sm:p-4"
-          style={{ boxShadow: "var(--shadow-soft)" }}>
+        <section
+          className="sticky top-16 z-30 -mx-2 mb-8 rounded-2xl border bg-background/80 p-3 backdrop-blur-md sm:p-4"
+          style={{ boxShadow: "var(--shadow-soft)" }}
+        >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -93,21 +103,45 @@ function Index() {
             </div>
           </div>
 
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {allTags.map((t) => (
-              <button
-                key={t}
-                onClick={() => setTag(t)}
-                className={cn(
-                  "rounded-full border px-3 py-1 text-xs font-medium transition-all",
-                  tag === t
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-border bg-card text-muted-foreground hover:border-foreground/30 hover:text-foreground",
-                )}
-              >
-                {t}
-              </button>
-            ))}
+          <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Status</span>
+              <div className="flex flex-wrap gap-1.5">
+                {STATUSES.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setStatus(s)}
+                    className={cn(
+                      "rounded-full border px-3 py-1 text-xs font-medium transition-all",
+                      status === s
+                        ? "border-foreground bg-foreground text-background"
+                        : "border-border bg-card text-muted-foreground hover:border-foreground/30 hover:text-foreground",
+                    )}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center gap-2 sm:ml-auto">
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Category</span>
+              <div className="flex flex-wrap gap-1.5">
+                {CATEGORIES.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setCategory(c)}
+                    className={cn(
+                      "rounded-full border px-3 py-1 text-xs font-medium transition-all",
+                      category === c
+                        ? "border-foreground bg-foreground text-background"
+                        : "border-border bg-card text-muted-foreground hover:border-foreground/30 hover:text-foreground",
+                    )}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 

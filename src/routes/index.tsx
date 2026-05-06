@@ -160,16 +160,53 @@ function Index() {
           </div>
         </section>
 
+        {/* Results header */}
+        <div className="mb-5 flex items-baseline justify-between">
+          <h2 className="text-sm font-medium text-muted-foreground">
+            {loading ? "Loading hackathons…" : `${filtered.length} ${filtered.length === 1 ? "result" : "results"}`}
+          </h2>
+          {!loading && (query || mode !== "All" || status !== "All" || category !== "All") && (
+            <button
+              onClick={resetFilters}
+              className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+
         {/* Grid */}
-        {filtered.length > 0 ? (
+        {loading ? (
           <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((h) => (
-              <HackathonCard key={h.id} h={h} />
+            {Array.from({ length: 6 }).map((_, i) => (
+              <HackathonCardSkeleton key={i} />
+            ))}
+          </section>
+        ) : filtered.length > 0 ? (
+          <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((h, i) => (
+              <div
+                key={h.id}
+                className="animate-fade-in"
+                style={{ animationDelay: `${Math.min(i * 60, 360)}ms`, animationFillMode: "backwards" }}
+              >
+                <HackathonCard h={h} />
+              </div>
             ))}
           </section>
         ) : (
-          <div className="rounded-2xl border border-dashed py-20 text-center">
-            <p className="text-sm text-muted-foreground">No hackathons match your filters.</p>
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed bg-card/50 px-6 py-20 text-center animate-fade-in">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
+              <SearchX className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <h3 className="mt-5 text-lg font-semibold tracking-tight">No hackathons found</h3>
+            <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+              Try adjusting your search or removing a filter — there might be something great hiding under a different category.
+            </p>
+            <Button onClick={resetFilters} variant="outline" size="sm" className="mt-6">
+              <RotateCcw className="h-3.5 w-3.5" />
+              Reset filters
+            </Button>
           </div>
         )}
       </main>

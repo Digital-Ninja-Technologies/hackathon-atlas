@@ -74,22 +74,22 @@ function Index() {
 
       <main className="mx-auto max-w-6xl px-6 pb-24">
         {/* Hero */}
-        <section className="pt-16 pb-10 sm:pt-24">
-          <div className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground">
+        <section className="pt-16 pb-12 sm:pt-28 sm:pb-16 animate-fade-in">
+          <div className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-foreground/20">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
             {hackathons.length} hackathons live this season
           </div>
-          <h1 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h1 className="mt-6 max-w-2xl text-4xl font-semibold tracking-tight sm:text-6xl sm:leading-[1.05]">
             Find Your Next Hackathon
           </h1>
-          <p className="mt-3 max-w-xl text-base text-muted-foreground sm:text-lg">
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Discover upcoming, ongoing, and past hackathons tailored for you.
           </p>
         </section>
 
         {/* Filter bar */}
         <section
-          className="sticky top-16 z-30 -mx-2 mb-8 rounded-2xl border bg-background/80 p-3 backdrop-blur-md sm:p-4"
+          className="sticky top-16 z-30 -mx-2 mb-10 rounded-2xl border bg-background/80 p-3 backdrop-blur-md transition-shadow sm:p-4"
           style={{ boxShadow: "var(--shadow-soft)" }}
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

@@ -13,7 +13,7 @@ export function SiteHeader() {
         </Link>
         <nav className="flex items-center gap-6 text-sm text-muted-foreground">
           <Link to="/" className="transition-colors hover:text-foreground">Discover</Link>
-          <a href="#" className="transition-colors hover:text-foreground">Submit</a>
+          <Link to="/submit" className="transition-colors hover:text-foreground">Submit</Link>
           <a href="#" className="hidden rounded-full bg-foreground px-4 py-1.5 text-background transition-opacity hover:opacity-90 sm:inline-block">
             Sign in
           </a>

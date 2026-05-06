@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
 
 const MODES = ["All", "Online", "Offline", "Hybrid"] as const;
 const STATUSES = ["All", "Upcoming", "Ongoing", "Past"] as const;
-const CATEGORIES = ["All", "AI", "Web3", "Design", "Open Source"] as const;
+const CATEGORIES = ["All", "AI", "Web3", "Design", "Climate", "Health", "Fintech", "Security", "Open Source"] as const;
 
 function getStatus(h: { date: string; endDate?: string }): "Upcoming" | "Ongoing" | "Past" {
   const now = Date.now();
@@ -59,7 +59,7 @@ function Index() {
     return hackathons.filter((h) => {
       if (mode !== "All" && h.mode !== mode) return false;
       if (status !== "All" && getStatus(h) !== status) return false;
-      if (category !== "All" && !h.tags.includes(category)) return false;
+      if (category !== "All" && !h.tags.some((t) => t.toLowerCase().includes(category.toLowerCase()))) return false;
       if (!q) return true;
       return (
         h.name.toLowerCase().includes(q) ||
@@ -78,7 +78,7 @@ function Index() {
         <section className="pt-16 pb-12 sm:pt-28 sm:pb-16 animate-fade-in">
           <div className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-foreground/20">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-            {hackathons.length} hackathons live this season
+            {hackathons.length} hackathons in the atlas
           </div>
           <h1 className="mt-6 max-w-2xl text-4xl font-semibold tracking-tight sm:text-6xl sm:leading-[1.05]">
             Find Your Next Hackathon

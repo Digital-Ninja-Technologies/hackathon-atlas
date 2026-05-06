@@ -39,6 +39,19 @@ function Index() {
   const [mode, setMode] = useState<(typeof MODES)[number]>("All");
   const [status, setStatus] = useState<(typeof STATUSES)[number]>("All");
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("All");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 600);
+    return () => clearTimeout(t);
+  }, []);
+
+  const resetFilters = () => {
+    setQuery("");
+    setMode("All");
+    setStatus("All");
+    setCategory("All");
+  };
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

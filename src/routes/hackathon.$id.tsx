@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Calendar, MapPin, Trophy, Users, ExternalLink } from "lucide-react";
 import { hackathons } from "@/data/hackathons";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -104,6 +105,7 @@ function HackathonDetail() {
           </Button>
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

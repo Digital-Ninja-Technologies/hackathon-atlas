@@ -284,7 +284,7 @@ function StepDetails({
       {data.mode !== "Online" && (
         <Field
           label="Location"
-          required={data.mode !== "Online"}
+          required
           hint={data.mode === "Hybrid" ? "In-person venue, e.g. Remote + NYC" : "City and country"}
           error={errors.find((e) => e.includes("Location"))}
         >

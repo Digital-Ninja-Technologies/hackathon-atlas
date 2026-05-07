@@ -9,10 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SubmitRouteImport } from './routes/submit'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HackathonIdRouteImport } from './routes/hackathon.$id'
-import { Route as SubmitRouteImport } from './routes/submit'
 
+const SubmitRoute = SubmitRouteImport.update({
+  id: '/submit',
+  path: '/submit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -23,44 +34,57 @@ const HackathonIdRoute = HackathonIdRouteImport.update({
   path: '/hackathon/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SubmitRoute = SubmitRouteImport.update({
-  id: '/submit',
-  path: '/submit',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/hackathon/$id': typeof HackathonIdRoute
+  '/about': typeof AboutRoute
   '/submit': typeof SubmitRoute
+  '/hackathon/$id': typeof HackathonIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/hackathon/$id': typeof HackathonIdRoute
+  '/about': typeof AboutRoute
   '/submit': typeof SubmitRoute
+  '/hackathon/$id': typeof HackathonIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/hackathon/$id': typeof HackathonIdRoute
+  '/about': typeof AboutRoute
   '/submit': typeof SubmitRoute
+  '/hackathon/$id': typeof HackathonIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/hackathon/$id' | '/submit'
+  fullPaths: '/' | '/about' | '/submit' | '/hackathon/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/hackathon/$id' | '/submit'
-  id: '__root__' | '/' | '/hackathon/$id' | '/submit'
+  to: '/' | '/about' | '/submit' | '/hackathon/$id'
+  id: '__root__' | '/' | '/about' | '/submit' | '/hackathon/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  HackathonIdRoute: typeof HackathonIdRoute
+  AboutRoute: typeof AboutRoute
   SubmitRoute: typeof SubmitRoute
+  HackathonIdRoute: typeof HackathonIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/submit': {
+      id: '/submit'
+      path: '/submit'
+      fullPath: '/submit'
+      preLoaderRoute: typeof SubmitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -75,20 +99,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HackathonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/submit': {
-      id: '/submit'
-      path: '/submit'
-      fullPath: '/submit'
-      preLoaderRoute: typeof SubmitRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  HackathonIdRoute: HackathonIdRoute,
+  AboutRoute: AboutRoute,
   SubmitRoute: SubmitRoute,
+  HackathonIdRoute: HackathonIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
